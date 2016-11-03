@@ -1,0 +1,3 @@
+DOC_NAME=ScalaTour
+echo "Building $DOC_NAME.pdf"
+pandoc -t beamer --latex-engine=xelatex --no-tex-ligatures -fmarkdown-implicit_figures ${DOC_NAME}.md -o ${DOC_NAME}.pdf
