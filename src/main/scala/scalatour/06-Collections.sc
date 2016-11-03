@@ -52,19 +52,6 @@ transMap2("who")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 val wordLengthTuples = l.map(s => (s, s.length))
 
 val lengthMap = wordLengthTuples.groupBy { case (word, length) => length }
