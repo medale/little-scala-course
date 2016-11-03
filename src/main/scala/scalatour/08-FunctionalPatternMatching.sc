@@ -23,3 +23,8 @@ l match {
 	case x :: xs => println(s"Head was ${x}, tail is ${xs}")
 	case Nil => println("List was empty")
 }
+
+l match {
+	case Nil => println("empty")
+}
+

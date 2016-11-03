@@ -24,3 +24,8 @@ val (youngPeople, olderPeople) =
 	}
 }
 
+val Person(name, age) = p3
+
+name
+age
+

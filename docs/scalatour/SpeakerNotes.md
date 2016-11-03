@@ -41,7 +41,11 @@
 * Conciseness
      * no semicolons, static type inference, lots of syntactic sugar, 
      functional processing, implicits
-     
+* Mixed Paradigms
+     * Object Oriented
+          * all objects, classes, case classes, traits, mixins
+     * Functional 
+          
 # scalatour/01-NoSemicolons
 * optional semicolons
 * type inference
@@ -60,35 +64,69 @@
 * Everything is an object (but might translate to Java primitive)
 * Use == for testing equality (eq object reference)
 
-# scalatour/
+# scalatour/04-Tuples
+* Most useful as pair/two-tuple (up to 22)
+* Strongly typed for each position
+* access via _1, _2 methods or pattern matching
 
-# scalatour/
+# scalatour/05-Options
+* Avoid null and NullPointerException (NPE)
+* Option\[T\] - Some\[T\] or None
+     * sealed abstract class Option, class Some, object None
+* Options act like a collection     
 
-# scalatour/
+# scalatour/06-Collections
+* Array
+* Immutable, mutable data structures
+     * List
+     * Higher-order functions
+          * filter, map, flatMap, reduce, fold... 
+     * Map   
+     * Set, Vector...
+     
+# Scala Docs
+* http://www.scala-lang.org/api/2.11.8/
+* StringOps
+* List - Singleton object vs. class
 
-# scalatour/
+# scalatour/07-MultilineStrings
+* Triple quotes
+* substitution (f for printf formatting)
 
-# scalatour/
+# scalatour/08-FunctionalPatternMatching
+* match construct
+* match by type, structure
+* default case or MatchError
 
-# scalatour/
+# scalatour/09-ParsingConfig
+* Match on regular expressions
+* Go Options
 
-# scalatour/
+# scalatour/10-ClassesTraitsMixins
+* class - constructor/body
+* constructor args - val, var, no modifier
+* traits
 
-# scalatour/
+# scalatour/11-CaseClasses
+* provide val accessors
+* apply/unapply, hashCode, toString
+* pattern matching
 
-# scalatour/
+# scalatour/12-Scripting
+* In the small
+* sys.process
+* sys.env
+* sys.props
 
-# scalatour/
+# scalatour/13-JavaInterop
+* to/from Java/Scala collections
+* BeanProperty for getters/setters
 
-# scalatour/
+# scalatour/14-Implicits
+* Use sparingly!
+* Powerful way to extend closed classes
 
-# scalatour/
-
-# scalatour/
-
-# scalatour/
-
-# scalatour/
-
-# scalatour/
+# scalatour/Spark15
+* Implemented in Scala
+* Powerful functional primitives for scalable cluster processing
 
