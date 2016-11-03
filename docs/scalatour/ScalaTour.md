@@ -48,6 +48,10 @@
 * Mixed Paradigms
      * Object Oriented
      * Functional 
+* Options, Collections
+* Functional Pattern Matching
+* Implicits
+* Spark
      
 # scalatour/01-NoSemicolons
 * optional semicolons

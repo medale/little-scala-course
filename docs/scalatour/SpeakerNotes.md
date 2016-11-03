@@ -36,6 +36,23 @@
 * Scala shell
 * IDEA Scala Worksheet
 * Scala IDE
+* sbt console
+
+# Typesafe Config Exploration
+```scala
+import com.typesafe.config.ConfigFactory
+val configStr =
+   """analytic {
+   |   startTime = 2016103111,
+   |   endTime = 2016103115
+   |}
+   """.stripMargin
+
+val appConfig = 
+   ConfigFactory.parseString(configStr)
+appConfig.hasPath("analytic.timeStart")
+appConfig.getString("analytic.startTime")
+```
 
 # Scala Tour
 * Conciseness
