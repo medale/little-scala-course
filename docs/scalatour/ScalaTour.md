@@ -50,53 +50,130 @@
 * Implicits
 * Spark
      
-# scalatour/01-NoSemicolons
+# Vals and vars but no semicolons
 ```scala
 val helloWorld = "Hello, Scala World!"
-
-val helloWorld2: String =
-	s"${helloWorld} explict type"
 
 //vals are immutable
 //helloWorld2 = "this is a different string"
 
-val hello = "Hello"
 val names = List("Markus", "Joe", "Jane")
 
 //vars are mutable
 var allHellos = ""
 
 names.foreach(name =>
-	allHellos += s"${hello}, ${name}! ")
+	allHellos += s"Hello, ${name}! ")
 
 println(allHellos)
-
-//or
-names.mkString("Hello ", " and ", "!")
+> Hello, Markus! Hello, Joe! Hello, Jane!
 ```
  
-# scalatour/02-Functions
-* Use def keyword to define function/method
-* arg type declaration after variable name
-* return type
-* body of function
-* expressions vs. statements - last expression is returned
-* function literals
+# Defining a function, higher-order functions
+```scala
+def hasAtLeastThreeLetters(input: String): Boolean = {
+	if ((input != null) && (!input.isEmpty)) {
+		val letters = input.filter(c => c.isLetter)
+		letters.size >= 3
+	} else { 
+	  false 
+	}
+}
+```
+
+# Calling a function - syntactic sugar
+```scala
+val testInputs = List(null, "", "lower", "Upper")
+
+testInputs.map((input: String) => 
+    hasAtLeastThreeLetters(input))
+    
+testInputs.map((input) =>
+		hasAtLeastThreeLetters(input)) 
+		  
+testInputs.map(input => hasAtLeastThreeLetters(input))
+
+testInputs.map(hasAtLeastThreeLetters(_))
+
+testInputs.map(hasAtLeastThreeLetters)
+> res0: List[Boolean] = List(false, false, true, true)
+```
+
+# Assigning functions/function literals to variables
+```scala
+val vowels = List('a','e','i','o','u')
+
+val threeLs: String => Boolean = hasAtLeastThreeLetters
+
+threeLs("abcd")
+> res1: Boolean = true
+
+val removeVowels: (String) => String = { (str) =>
+	str.filter(c => !vowels.contains(c))
+}
+
+val removeNonLetters: String => String = { str =>
+	str.filter(c => c.isLetter)
+}
+
+removeVowels("wabbit")
+> res2: String = wbbt
+```
+
+# Everything's an object, more syntactic sugar, == equality
+```scala
+3 * 10
+
+3.*(10)
+
+1 to 10
+1.to(10)
+> res2: scala.collection.immutable.Range.Inclusive = 
+ Range(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+val foo = "foo"
+val bar = new String("foo")
+
+foo == bar
+```
  
-# scalatour/03-AllObjects
-* Everything is an object (but might translate to Java primitive)
-* Use == for testing equality (eq object reference)
+# Built-in tuples
+```scala
+val tuple = ("hello", 42)
+
+val tuple2: (String, Int) = ("hello", 42)
+
+val tuple3: Tuple2[String, Int] = ("hello", 42)
+
+val triple = ("123-22-2111", "Joe", "443.998.8899")
+
+tuple._1
+tuple._2
+
+val (word, count) = tuple
+> word: String = hello
+> count: Int = 5
+```
  
-# scalatour/04-Tuples
-* Most useful as pair/two-tuple (up to 22)
-* Strongly typed for each position
-* access via _1, _2 methods or pattern matching
- 
-# scalatour/05-Options
-* Avoid null and NullPointerException (NPE)
-* Option\[T\] - Some\[T\] or None
-     * sealed abstract class Option, class Some, object None
-* Options act like a collection     
+# Options - no more NullPointerExceptions!
+```scala
+val portOpt: Option[Int] = Some(5123)
+val port2Opt: Option[Int] = None
+portOpt.get
+> res0: Int = 5123
+
+port2Opt.get - 
+> java.util.NoSuchElementException: None.get
+
+port2Opt.getOrElse(3306)
+> res1: Int = 3306
+
+portOpt.foreach(port => println(s"opening port ${port}"))
+> res2: Unit = ()
+
+Option(null)
+> res3: Option[Null] = None
+```
  
 # scalatour/06-Collections
 * Array
