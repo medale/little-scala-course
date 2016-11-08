@@ -25,9 +25,15 @@ lengths.sum
 
 
 
-val transMap = Map("when" -> "wann",
-	"shall" -> "sollen", "we" -> "wir",
-	"three" -> "drei")
+var transMap = Map("when" -> "wann",
+	"shall" -> "sollen", "we" -> "wir")
+
+
+val entryTuple1 = ("three" -> "drei")
+val entryTuple2 = ("meet", "treffen")
+
+transMap = transMap + entryTuple1
+transMap = transMap + entryTuple2
 
 transMap("when")
 //transMap("who")
@@ -41,7 +47,7 @@ val whenGerman = if (transMap.contains("when")) {
 	"unbekannt"
 }
 
-val whenGerman2 = transMap.get("when").getOrElse("unbekannt")
+val whenGerman2 = transMap.getOrElse("when", "unbekannt")
 
 val transMap2 = transMap.withDefaultValue("unbekannt")
 

@@ -2,9 +2,6 @@
 % Leveraging functional, OO, libraries and frameworks
 % Markus Dale, 2016
 
-# Scala - The Bad and Ugly
-![](graphics/garbage-can-1260832_1280.jpg)
-
 # Scala - The Good
 ![](graphics/dom-1707634_960_720.jpg)
 
@@ -54,10 +51,29 @@
 * Spark
      
 # scalatour/01-NoSemicolons
-* optional semicolons
-* type inference
-* vals vs. vars
-* higher-order functions on collections
+```scala
+val helloWorld = "Hello, Scala World!"
+
+val helloWorld2: String =
+	s"${helloWorld} explict type"
+
+//vals are immutable
+//helloWorld2 = "this is a different string"
+
+val hello = "Hello"
+val names = List("Markus", "Joe", "Jane")
+
+//vars are mutable
+var allHellos = ""
+
+names.foreach(name =>
+	allHellos += s"${hello}, ${name}! ")
+
+println(allHellos)
+
+//or
+names.mkString("Hello ", " and ", "!")
+```
  
 # scalatour/02-Functions
 * Use def keyword to define function/method

@@ -1,8 +1,6 @@
 import scala.collection.JavaConverters._
 import java.util.ArrayList
-
 import scala.beans.BeanProperty
-
 //import aliasing - very nice for name collisions!
 import java.util.{List => JavaList}
 
