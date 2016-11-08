@@ -8,4 +8,4 @@ Materials for a little course in Scala (regards to A Little History of the World
 # Grateful Acknowledgments
 * Many thanks to Prof. Martin Odersky, his research group, Lightbend and the amazing Scala community
 * src/main/resources/dictionary/american-english is from american-english installed by Ubuntu wamerican package
-* https://pixabay.com for open source images (especially, Hans - Garbage can picture, OpenClipart-Vector - snail, and Tama66 - Cathedral)
+* https://pixabay.com for open source images (especially, OpenClipart-Vector - snail, and Tama66 - Cathedral)

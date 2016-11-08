@@ -2,8 +2,8 @@
 
 3.*(10)
 
-15.toBinaryString
-15 toBinaryString
+1 to 10
+1.to(10)
 
 val foo = "foo"
 val bar = new String("foo")

@@ -6,14 +6,13 @@ val helloWorld2: String =
 //vals are immutable
 //helloWorld2 = "this is a different string"
 
-val hello = "Hello"
 val names = List("Markus", "Joe", "Jane")
 
 //vars are mutable
 var allHellos = ""
 
 names.foreach(name =>
-	allHellos += s"${hello}, ${name}! ")
+	allHellos += s"Hello, ${name}! ")
 
 println(allHellos)
 

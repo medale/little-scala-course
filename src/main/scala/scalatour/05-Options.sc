@@ -7,4 +7,6 @@ portOpt.get
 
 port2Opt.getOrElse(3306)
 
-portOpt.foreach(port => println(s"connecting to ${port}..."))
+portOpt.foreach(port => println(s"opening ${port}"))
+
+Option(null)
