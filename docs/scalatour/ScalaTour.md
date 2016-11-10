@@ -175,21 +175,122 @@ Option(null)
 > res3: Option[Null] = None
 ```
  
-# scalatour/06-Collections
-* Array
-* Immutable, mutable data structures
-     * List
-     * Higher-order functions
-          * filter, map, flatMap, reduce, fold... 
-     * Map   
-     * Set, Vector...
+# Collections - Arrays (with syntactic sugar)
+```scala
+val a : Array[Int] = Array(1,3,7,9)
+//val b = Array.apply(1,3,7,9)
+
+a(0)
+//b.apply(0)
+
+a(0) = 5
+//b.update(0, 5)
+
+a.mkString(",")
+> res1: String = 5,3,7,9
+```
+
+# Collections - Lists
+```scala
+val ws = List("When", "shall", "we", "three")
+
+val longWords = ws.filter(s => s.length > 4)
+
+val lowers = ws.map(_.toLowerCase)
+
+lowers.flatMap(_.permutations)
+> res3: List[String] = List(when, whne, wehn...
+
+//how many letters in our list?
+val lengths = ws.map(_.length)
+lengths.reduce(_ + _)
+lengths.sum
+```
     
+# Collections - Maps 1
+```scala
+var transMap = Map("when" -> "wann",
+	"shall" -> "sollen", "we" -> "wir")
+
+val entryTuple1 = ("three" -> "drei")
+val entryTuple2 = ("meet", "treffen")
+
+transMap = transMap + entryTuple1
+transMap = transMap + entryTuple2
+
+transMap("when")
+//transMap("who") //java.util.NoSuchElementException
+
+transMap.get("when")
+> res10: Option[String] = Some(wann)
+
+transMap.get("who")
+res11: Option[String] = None
+```
+
+# Collections - Maps 1
+```scala
+val whenGerman = if (transMap.contains("when")) {
+	transMap("when")
+} else {
+	"unbekannt"
+}
+
+val whenGerman2 = transMap.getOrElse("when", "unbekannt")
+
+val transMap2 = transMap.withDefaultValue("unbekannt")
+
+transMap2("when")
+> res12: String = wann
+
+transMap2("who")
+> res13: String = unbekannt
+```
+
+# Collections - higher-order functions
+```scala
+val wordLengthTuples = ws.map(s => (s, s.length))
+
+val lengthMap = 
+   wordLengthTuples.groupBy { case (word, length) => 
+      length }
+> lengthMap: immutable.Map[Int,List[(String, Int)]]
+
+lengthMap(5)
+>res14: List[(String, Int)] = List((shall,5), (three,5))
+```
+
+# For Comprehensions, yield, guards
+```scala
+val input = "afed-123-ghi-45-67"
+
+//if we did not have RichChar.isDigit...
+def isDigit(c : Char): Boolean = {
+	('0' to '9').contains(c)
+}
+
+var digits = ""
+for (c <- input) {
+	if (isDigit(c)) digits += c
+}
+digits
+> res1: String = 1234567
+
+val digits2 = for(c <- input if isDigit(c)) yield c
+> digits2: String = 1234567
+```
+
 # Scala Docs
 ![](graphics/scala-docs.png)
 
 # scalatour/07-MultilineStrings
 * Triple quotes
 * substitution (f for printf formatting)
+```scala
+val d = 100
+val s = f"${d}%05d"
+> s: String = 00100
+```
 
 # scalatour/08-FunctionalPatternMatching
 * match construct
@@ -228,8 +329,12 @@ Option(null)
 * Implemented in Scala
 * Powerful functional primitives for scalable cluster processing
 
+# scalatour/exercises
+* See scalatour_exercises and scalatour_solutions
+
 # Resources
 * Coursera/EPFL [Functional Programming in Scala Specialization](https://www.coursera.org/specializations/scala)
+* [Horstmann, Scala for the Impatient Video](https://www.safaribooksonline.com/library/view/scala-for-the/9780134510613/)
 * [Odersky et al., Programming in Scala, 3rd Edition](https://www.safaribooksonline.com/library/view/programming-in-scala/9780981531687/)
 * [Payne, Wampler, Programming Scala, 2nd Edition](https://www.safaribooksonline.com/library/view/programming-scala-2nd/9781491950135/)
 * [Alexander, Scala Cookbook](https://www.safaribooksonline.com/library/view/scala-cookbook/9781449340292/)

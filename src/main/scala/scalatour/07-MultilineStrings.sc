@@ -47,3 +47,7 @@ insults
 val random0 = r.shuffle(col0s.toList)
 
 random0(0)
+
+//https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html
+val d = 100
+val s = f"${d}%05d"

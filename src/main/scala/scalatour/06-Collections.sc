@@ -1,26 +1,32 @@
 val a : Array[Int] = Array(1,3,7,9)
+//val b = Array.apply(1,3,7,9)
 
 a(0)
+//b.apply(0)
+
+a(0) = 5
+//b.update(0, 5)
 
 a.mkString(",")
 
 
-val l = List("When", "shall", "we", "three")
+val ws = List("When", "shall", "we", "three")
 
-val longWords = l.filter(s => s.length > 4)
+val longWords = ws.filter(s => s.length > 4)
+ws
+val lowers = ws.map(_.toLowerCase)
 
-l
+"abc".permutations
+"abc".permutations.toList
 
-val lowers = l.map(w => w.toLowerCase)
-
-val perms = lowers.map(w => w.permutations)
+val perms = lowers.map(_.permutations)
 perms.flatten
 
-lowers.flatMap(w => w.permutations)
+lowers.flatMap(_.permutations)
 
 //how many letters in our list?
-val lengths = l.map(w => w.length)
-lengths.reduce((acc, i) => acc + i)
+val lengths = ws.map(_.length)
+lengths.reduce(_ + _)
 lengths.sum
 
 
@@ -58,7 +64,7 @@ transMap2("who")
 
 
 
-val wordLengthTuples = l.map(s => (s, s.length))
+val wordLengthTuples = ws.map(s => (s, s.length))
 
 val lengthMap = wordLengthTuples.groupBy { case (word, length) => length }
 
