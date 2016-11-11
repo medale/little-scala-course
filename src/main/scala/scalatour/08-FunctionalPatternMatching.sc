@@ -1,30 +1,51 @@
 def getObject(): Any = {
 	//some call to Java
 	1234
-	//BigInt(100000000)
 	//3.14
 	//"foo"
 }
 
-val myObj : Any = getObject
+val myObj: Any = getObject
 
-myObj match {
-	case 1234 => println(s"Exact match on 1234")
-	case n: BigInt => println(s"BigInt: ${n}")
-	case d: Double => println(s"Double: ${d}")
-	case default => println(s"Default: ${default.getClass}")
+val result: Long = myObj match {
+	case 1234 => {
+		println("Constant pattern 1234")
+		1234
+	}
+	case i: Int => {
+		println(s"Typed pattern int: ${i}")
+		i
+	}
+	case d: Double => {
+		println(s"Typed pattern Double: ${d}")
+		math.round(d)
+	}
+	case default => //or wildcard _ (can't reference)
+		println(s"Variable pattern: ${default.getClass}")
+		0
 }
 
-val l = List(2,3,5,8)
+//Sequence patterns
+val l = List(1, 3, 5, 8)
 
 l match {
-	case List(1,x,y) => println(s"List 1 with two elems ${x}, ${y}")
-	case 1 :: x2 :: xs => println(s"List 1 with second elem ${x2} and tail ${xs}")
-	case x :: xs => println(s"Head was ${x}, tail is ${xs}")
+	case List(1, x, y) => {
+		println(s"1, then ${x}, ${y}")
+	}
+	case List(1, x, _*) => {
+		println(s"second element ${x}")
+	}
+	case 1 :: x :: xs => {
+		println(s"head 1, ${x} and tail ${xs}")
+	}
+	case x :: xs => {
+		println(s"Head ${x}, tail ${xs}")
+	}
 	case Nil => println("List was empty")
 }
 
-l match {
-	case Nil => println("empty")
-}
+//MatchError
+//l match {
+//	case Nil => println("empty")
+//}
 

@@ -29,7 +29,9 @@ object Spark15 {
 
 		val youngerDs = peopleDs.filter(p => p.age < 40)
 
-		val resultRows = peopleDs.groupBy($"name").avg("age").collect()
+		val resultRows = peopleDs.
+			groupBy($"name").
+			avg("age").collect()
 
 		resultRows.foreach { row =>
 			println(s"Name: ${row.get(0)} Avg. age: ${row.get(1)}")

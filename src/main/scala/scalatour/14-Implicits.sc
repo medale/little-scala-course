@@ -1,5 +1,5 @@
 import scala.collection.immutable.StringOps
-import java.util.HashMap
+
 
 //where do all these nice String methods come from?
 
@@ -15,13 +15,13 @@ import java.util.HashMap
 val stringOpsFoo: StringOps =
 	Predef.augmentString("foo")
 
+import java.util.HashMap
+import scala.language.implicitConversions
 
 class FooMap extends HashMap[String,String]
 
 val fooMap = new FooMap()
 fooMap.put("foo","bar")
-
-fooMap.get("foo")
 fooMap.get("baz")
 
 class FooMapOps(fooMap: FooMap) {
@@ -37,11 +37,6 @@ class FooMapOps(fooMap: FooMap) {
 implicit def augmentFooMap(fooMap: FooMap): FooMapOps = {
 	new FooMapOps(fooMap)
 }
-
-val fooMap2 = new FooMap()
-fooMap2.put("foo","bar")
-
-fooMap.getOpt("foo")
 
 fooMap.getOpt("baz")
 

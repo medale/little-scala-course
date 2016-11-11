@@ -9,8 +9,9 @@ a(0) = 5
 
 a.mkString(",")
 
-
 val ws = List("When", "shall", "we", "three")
+
+val ws2 = "When" :: "shall" :: Nil
 
 val longWords = ws.filter(s => s.length > 4)
 ws

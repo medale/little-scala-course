@@ -1,6 +1,15 @@
-import java.util.UUID
+class Person(var name: String) {
+	if (name.isEmpty) throw new
+			IllegalArgumentException("Empty name")
+}
 
-class Person(var name: String)
+try {
+	new Person("")
+} catch {
+	case e: IllegalArgumentException =>
+		println(e)
+}
+
 
 val p1 = new Person("John Doe")
 
@@ -12,17 +21,15 @@ p1.name
 
 
 class Employee(name: String,
-							 val id: String = UUID.randomUUID().toString)
-	extends Person(name) {
-
-}
+							 val id: String = "009")
+	extends Person(name)
 
 val e1 = new Employee("Jennifer Huston")
 
 e1.name
 e1.id
 
-val uuid = UUID.fromString("28724680-0f51-4e0a-81c9-da161b96fee8").toString
+val uuid = "42"
 
 val e2 = new Employee("Austin Martin", uuid)
 
@@ -32,6 +39,9 @@ val e3 = new Employee("Austin Martin", uuid)
 
 //by default - Object.equals
 val areTheyEqual = e2 == e3
+
+
+
 
 trait AwakenessReservoir {
 	var minutesToDozingOff: Int = 0
@@ -54,7 +64,8 @@ trait Exerciser extends AwakenessReservoir {
 	}
 }
 
-val joe = new Person("Joe") with CoffeeDrinker
+val joe = new Person("Joe")
+	with CoffeeDrinker
 
 joe.drinkCoffee()
 
@@ -66,7 +77,9 @@ joe.minutesToDozingOff
 
 
 
-val sue = new Person("Sue") with CoffeeDrinker with Exerciser
+val sue = new Person("Sue")
+	with CoffeeDrinker
+	with Exerciser
 
 sue.minutesToDozingOff
 

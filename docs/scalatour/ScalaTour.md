@@ -194,6 +194,8 @@ a.mkString(",")
 ```scala
 val ws = List("When", "shall", "we", "three")
 
+val ws2 = "When" :: "shall" :: Nil
+
 val longWords = ws.filter(s => s.length > 4)
 
 val lowers = ws.map(_.toLowerCase)
@@ -283,53 +285,283 @@ val digits2 = for(c <- input if isDigit(c)) yield c
 # Scala Docs
 ![](graphics/scala-docs.png)
 
-# scalatour/07-MultilineStrings
-* Triple quotes
-* substitution (f for printf formatting)
+# Multiline strings and interpolations
 ```scala
+val multi = """It was the best of times, 
+        |it was the worst of times""".stripMargin
+
 val d = 100
 val s = f"${d}%05d"
 > s: String = 00100
 ```
 
-# scalatour/08-FunctionalPatternMatching
-* match construct
-* match by type, structure
-* default case or MatchError
+# Functional Pattern Matching - constant, type & variable
+```scala
+val result: Long = myObj match {
+	case 1234 => {
+		println("Constant pattern 1234")
+		1234
+	}
+	case i: Int => {
+		println(s"Typed pattern int: ${i}")
+		i
+	}
+	case d: Double => {
+		println(s"Typed pattern Double: ${d}")
+		math.round(d)
+	}
+	case default => //or wildcard _ (can't reference)
+		println(s"Variable pattern: ${default.getClass}")
+		0
+}
+```
 
-# scalatour/09-ParsingConfig
-* Match on regular expressions
-* Go Options
+# Functional Pattern Matching - sequence patterns
+```scala
+l match {
+	case List(1, x, y) => {
+		println(s"1, then ${x}, ${y}")
+	}
+	case List(1, x, _*) => {
+		println(s"second element ${x}")
+	}
+	case 1 :: x :: xs => {
+		println(s"head 1, ${x} and tail ${xs}")
+	}
+	case x :: xs => {
+		println(s"Head ${x}, tail ${xs}")
+	}
+	case Nil => println("List was empty")
+}
+```
 
-# scalatour/10-ClassesTraitsMixins
-* class - constructor/body
-* constructor args - val, var, no modifier
-* traits
+# Regex Pattern
+```scala
+val HostPortRegex = 
+	"""http://([\w.]+):(\d+)""".r
 
-# scalatour/11-CaseClasses
-* provide val accessors
-* apply/unapply, hashCode, toString
-* pattern matching
+val url = "http://es.host.com:9200"
+val HostPortRegex(host,port) = url
+
+val hostPortOpt = url match {
+	case HostPortRegex(host, port) => 
+		Some((host, port.toInt))
+	case _ => None	
+}
+```
+
+# Classes
+```scala
+class Person(var name: String) {
+	if (name.isEmpty) throw new
+			IllegalArgumentException("Empty name")
+}
+
+val p1 = new Person("John Doe")
+
+p1.name
+> res1: String = John Doe
+
+p1.name = "Joe Doe"
+```
+
+# Class inheritance
+```scala
+class Employee(name: String,
+			   val id: String = "009")
+	extends Person(name)
+
+val e1 = new Employee("Jennifer Huston")
+
+e1.name
+e1.id
+```
+
+# Traits
+```scala
+trait AwakenessReservoir {
+	var minutesToDozingOff: Int = 0
+}
+
+trait CoffeeDrinker extends AwakenessReservoir {
+	val r = scala.util.Random
+	def drinkCoffee(): Unit = {
+		val timeToBecomingTiredInMinutes = r.nextInt(120)
+		minutesToDozingOff += timeToBecomingTiredInMinutes
+	}
+}
+
+trait Exerciser extends AwakenessReservoir {
+	def exercise(): Unit = {
+		minutesToDozingOff += 120
+	}
+}
+```
+
+# Mixins
+```scala
+val sue = new Person("Sue") 
+  with CoffeeDrinker 
+  with Exerciser
+
+sue.minutesToDozingOff
+> res10: Int = 0
+
+sue.drinkCoffee()
+sue.minutesToDozingOff
+> res12: Int = 58
+
+sue.exercise()
+sue.minutesToDozingOff
+> res14: Int = 178
+```
+
+# Case Classes
+```scala
+case class Person(name: String, age: Int)
+
+val p1 = Person("John Doe", 42)
+
+p1.name //val
+p1.age
+
+val p2 = Person("Jane Doe", 39)
+val p3 = Person("Jane Doe", 39)
+
+val areTheyEqual = p2 == p3
+> areTheyEqual: Boolean = true
+```
+
+# Constructor pattern with pattern guard
+```scala
+val people: List[Person] = 
+	List(p1,p2,p3)
+
+val (youngerPeople, youngPeople) =
+	people.partition { person =>
+	person match {
+		case Person(_, age) if age < 40 => true
+		case _ => false
+	}
+}
+
+val Person(name, age) = p3
+```
 
 # scalatour/12-Scripting
-* In the small
-* sys.process
-* sys.env
-* sys.props
+```scala
+import scala.sys.process._
+import scala.sys.env
+import scala.sys.props
+import scala.language.postfixOps
 
-# scalatour/13-JavaInterop
-* to/from Java/Scala collections
-* BeanProperty for getters/setters
+val externalCommand = "tokenGenerator"
 
-# scalatour/14-Implicits
-* Use sparingly!
-* Powerful way to extend closed classes
+//run command and get its status code
+s"chmod +x ${externalCommand}"!
 
-# scalatour/Spark15
-* Implemented in Scala
-* Powerful functional primitives for scalable cluster processing
+//run command and get its output
+val myToken = s"./${externalCommand}"!!
 
-# scalatour/exercises
+env("PATH")
+> res2: String = /usr/local/bin:/usr/sbin:...
+props("user.name")
+> res3: String = medale
+```
+
+# Import Aliasing, Java Interoperability
+```scala
+import scala.collection._
+import scala.collection.JavaConverters._
+import java.util.ArrayList
+import java.util.{List => JavaList}
+
+val myJavaList = new ArrayList[String]()
+myJavaList.add("hello")
+myJavaList.add("world")
+
+val buffer: mutable.Buffer[String] = myJavaList.asScala
+val myScalaList: List[String] = buffer.toList
+
+val capStrings = myScalaList.map { str =>
+	str.capitalize
+}
+
+val javaCapStrings: JavaList[String] = capStrings.asJava
+> javaCapStrings: java.util.List[String] = [Hello, World]
+```
+
+# Implicits - Predef - StringOps
+```scala
+"abcdef".diff("abef")
+
+"abc".permutations.toList
+
+"Great for n-grams".sliding(2).toList
+3: String = art
+
+From: Predef
+implicit def augmentString(x: String): StringOps 
+   = new StringOps(x)
+```
+
+# Writing your own Implicit - augmenting HashMap with getOpt
+```scala
+import java.util.HashMap
+import scala.language.implicitConversions
+
+class FooMap extends HashMap[String,String]
+
+val fooMap = new FooMap()
+fooMap.put("foo","bar")
+fooMap.get("baz")
+> res5: String = null
+```
+
+# Implicit: Augmenting FooMap with getOpt
+```scala
+class FooMapOps(fooMap: FooMap) {
+   def getOpt(key: String): Option[String] = {
+		if (fooMap.containsKey(key)) {
+			Some(fooMap.get(key))
+		} else {
+			None
+		}
+	}
+}
+
+implicit def augmentFooMap(fooMap: FooMap): 
+   FooMapOps = {
+	new FooMapOps(fooMap)
+}
+
+fooMap.getOpt("baz")
+> res6: Option[String] = None
+```
+
+# Scala in action - Spark big data processing
+```scala
+val spark = SparkSession.builder()
+	.master("local")
+	.appName("combined-age")
+	.getOrCreate()
+
+import spark.implicits._
+
+val peopleDs = spark.createDataset(people)
+
+val youngerDs = peopleDs.filter(p => p.age < 40)
+
+val resultRows = peopleDs.
+  groupBy($"name").
+  avg("age").collect()
+
+resultRows.foreach { row =>
+  println(s"Name: ${row.get(0)} Avg. age: ${row.get(1)}")
+}
+```
+
+# Learn by doing - Scala exercises
 * See scalatour_exercises and scalatour_solutions
 
 # Resources
