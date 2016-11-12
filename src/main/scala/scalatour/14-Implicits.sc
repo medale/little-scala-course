@@ -7,7 +7,7 @@ import scala.collection.immutable.StringOps
 
 "abc".permutations.toList
 
-"Great for n-grams".sliding(2).toList
+"bi-grams".sliding(2).toList
 
 "No earth without art".slice(4,7)
 
@@ -15,29 +15,29 @@ import scala.collection.immutable.StringOps
 val stringOpsFoo: StringOps =
 	Predef.augmentString("foo")
 
+import java.util.{Map => JavaMap}
 import java.util.HashMap
 import scala.language.implicitConversions
 
-class FooMap extends HashMap[String,String]
+val map = new HashMap[String,String]()
+map.put("foo","bar")
+map.get("baz")
 
-val fooMap = new FooMap()
-fooMap.put("foo","bar")
-fooMap.get("baz")
-
-class FooMapOps(fooMap: FooMap) {
-	def getOpt(key: String): Option[String] = {
-		if (fooMap.containsKey(key)) {
-			Some(fooMap.get(key))
+class JavaMapOps[K,V](map: JavaMap[K,V]) {
+	def getOpt(key: K): Option[V] = {
+		if (map.containsKey(key)) {
+			Some(map.get(key))
 		} else {
 			None
 		}
 	}
 }
 
-implicit def augmentFooMap(fooMap: FooMap): FooMapOps = {
-	new FooMapOps(fooMap)
+implicit def augmentJavaMap[K,V](map: JavaMap[K,V]): JavaMapOps[K,V] = {
+	new JavaMapOps(map)
 }
 
-fooMap.getOpt("baz")
+map.getOpt("foo")
+map.getOpt("baz")
 
 

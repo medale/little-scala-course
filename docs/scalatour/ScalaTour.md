@@ -543,48 +543,52 @@ val javaCapStrings: JavaList[String] = capStrings.asJava
 # Implicits - Predef - StringOps
 ```scala
 "abcdef".diff("abef")
+> res0: String = cd
 
 "abc".permutations.toList
+> res1: List[String] = List(abc, acb, bac, bca, cab, cba)
 
-"Great for n-grams".sliding(2).toList
+"bi-grams".sliding(2).toList
+> res2: List[String] = List(bi, i-, -g, gr, ra, am, ms)
 
-3: String = art
+"No earth without art".slice(4,7)
+> res3: String = art
 
 From: Predef
 implicit def augmentString(x: String): StringOps 
    = new StringOps(x)
 ```
 
-# Writing your own Implicit - augmenting HashMap with getOpt
+# Writing your own Implicit - Map with getOpt
 ```scala
+import java.util.{Map => JavaMap}
 import java.util.HashMap
 import scala.language.implicitConversions
 
-class FooMap extends HashMap[String,String]
+val map = new HashMap[String,String]()
+map.put("foo","bar")
 
-val fooMap = new FooMap()
-fooMap.put("foo","bar")
-fooMap.get("baz")
+map.get("baz")
 > res5: String = null
 ```
 
-# Implicit: Augmenting FooMap with getOpt
+# Implicit: Augmenting Map with getOpt
 ```scala
-class FooMapOps(fooMap: FooMap) {
-   def getOpt(key: String): Option[String] = {
-		if (fooMap.containsKey(key)) {
-			Some(fooMap.get(key))
+class JavaMapOps[K,V](map: JavaMap[K,V]) {
+	def getOpt(key: K): Option[V] = {
+		if (map.containsKey(key)) {
+			Some(map.get(key))
 		} else {
 			None
 		}
 	}
 }
-
-implicit def augmentFooMap(fooMap: FooMap): 
-   FooMapOps = {
-	new FooMapOps(fooMap)
+implicit def augmentJavaMap[K,V](map: JavaMap[K,V]): 
+  JavaMapOps[K,V] = {
+	new JavaMapOps(map)
 }
-
+map.getOpt("foo")
+> res5: Option[String] = Some(bar)
 fooMap.getOpt("baz")
 > res6: Option[String] = None
 ```
@@ -595,11 +599,8 @@ val spark = SparkSession.builder()
 	.master("local")
 	.appName("combined-age")
 	.getOrCreate()
-
 import spark.implicits._
-
 val peopleDs = spark.createDataset(people)
-
 val youngerDs = peopleDs.filter(p => p.age < 40)
 
 val resultRows = peopleDs.
@@ -609,6 +610,8 @@ val resultRows = peopleDs.
 resultRows.foreach { row =>
   println(s"Name: ${row.get(0)} Avg. age: ${row.get(1)}")
 }
+> Name: John Avg. age: 30.0
+> Name: Jane Avg. age: 25.0
 ```
 
 # Learn by doing - Scala exercises
