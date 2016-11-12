@@ -379,41 +379,90 @@ e1.id
 
 # Traits
 ```scala
-trait AwakenessReservoir {
-	var minutesToDozingOff: Int = 0
-}
-
-trait CoffeeDrinker extends AwakenessReservoir {
-	val r = scala.util.Random
-	def drinkCoffee(): Unit = {
-		val timeToBecomingTiredInMinutes = r.nextInt(120)
-		minutesToDozingOff += timeToBecomingTiredInMinutes
+trait Audit {
+	var auditLevel = "low"
+	def audit(action: String): Unit = {
+		val user = getUser()
+		val message = getLogMessage(user, action)
+		writeAudit(message)
+	}	
+	
+	def writeAudit(message: String): Unit
+	
+	def getUser(): String = {
+		"alice"
+	}
+	def getLogMessage(user: String,
+					  action: String): String = {
+		s"${user} - ${action}"
 	}
 }
+```
 
-trait Exerciser extends AwakenessReservoir {
-	def exercise(): Unit = {
-		minutesToDozingOff += 120
+# LogAudit Trait
+```scala
+trait LogAudit extends Audit {
+
+	var logFile = "/var/log/audit"
+
+	override def writeAudit(message: String): Unit = {
+		//use log4j or Files to append to logFile
+		println(message)
+	}
+
+	override def getLogMessage(user: String,
+							   action: String): String = {
+		val basicMessage = 
+		   super.getLogMessage(action, user)
+		s"${basicMessage} to ${logFile}"
+	}
+}
+```
+
+# CloudAudit Trait
+```scala
+trait CloudAudit extends Audit {
+	var remoteHost = "host1:2121"
+
+	override def writeAudit(message: String): Unit = {
+		//write to remote host
+		println(message)
+	}
+
+	override def getLogMessage(action: String,
+							   user: String): String = {
+		val basicMessage = 
+		   super.getLogMessage(action, user)
+		s"${basicMessage} to ${remoteHost}"
+	}
+}
+```
+
+# Audited Service class
+```scala
+abstract class MyService extends Audit {
+	def execute(): Unit = {
+		audit("MyService.execute")
+		//execute...
 	}
 }
 ```
 
 # Mixins
 ```scala
-val sue = new Person("Sue") 
-  with CoffeeDrinker 
-  with Exerciser
+val myService0 = new MyService with LogAudit
+myService0.execute()
+> MyService.execute - alice to /var/log/audit
 
-sue.minutesToDozingOff
-> res10: Int = 0
+val myService1 = 
+   new MyService with LogAudit with CloudAudit
+myService1.execute()
+> MyService.execute - alice to /var/log/audit to host1
 
-sue.drinkCoffee()
-sue.minutesToDozingOff
-> res12: Int = 58
-
-sue.exercise()
-sue.minutesToDozingOff
-> res14: Int = 178
+val myService2 = 
+   new MyService with CloudAudit with LogAudit
+myService2.execute()
+> MyService.execute - alice to host1 to /var/log/audit
 ```
 
 # Case Classes
@@ -448,7 +497,7 @@ val (youngerPeople, youngPeople) =
 val Person(name, age) = p3
 ```
 
-# scalatour/12-Scripting
+# Scala in the small - scripting
 ```scala
 import scala.sys.process._
 import scala.sys.env
@@ -498,6 +547,7 @@ val javaCapStrings: JavaList[String] = capStrings.asJava
 "abc".permutations.toList
 
 "Great for n-grams".sliding(2).toList
+
 3: String = art
 
 From: Predef

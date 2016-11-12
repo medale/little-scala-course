@@ -1,4 +1,4 @@
-name := "scala-ecosystem-code"
+name := "little-scala-course"
 
 version := "1.0"
 

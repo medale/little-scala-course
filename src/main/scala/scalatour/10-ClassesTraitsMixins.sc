@@ -1,3 +1,5 @@
+import org.apache.commons.io.{FileUtils, IOUtils}
+
 class Person(var name: String) {
 	if (name.isEmpty) throw new
 			IllegalArgumentException("Empty name")
@@ -41,52 +43,74 @@ val e3 = new Employee("Austin Martin", uuid)
 val areTheyEqual = e2 == e3
 
 
+trait Audit {
 
+	var auditLevel = "low"
 
-trait AwakenessReservoir {
-	var minutesToDozingOff: Int = 0
-}
+	def audit(action: String): Unit = {
+		val user = getUser()
+		val message = getLogMessage(user, action)
+		writeAudit(message)
+	}
 
-trait CoffeeDrinker extends AwakenessReservoir {
+	def writeAudit(message: String): Unit
 
-	val r = scala.util.Random
+	def getUser(): String = {
+		//from login, cookie etc.
+		val randomUser = "alice"
+		randomUser
+	}
 
-	def drinkCoffee(): Unit = {
-		val timeToBecomingTiredInMinutes = r.nextInt(120)
-		minutesToDozingOff += timeToBecomingTiredInMinutes
+	def getLogMessage(user: String,
+										action: String): String = {
+		s"${user} - ${action}"
 	}
 }
 
-trait Exerciser extends AwakenessReservoir {
+trait LogAudit extends Audit {
 
-	def exercise(): Unit = {
-		minutesToDozingOff += 120
+	var logFile = "/var/log/audit"
+
+	override def writeAudit(message: String): Unit = {
+		//use log4j or Files to append to logFile
+		println(message)
+	}
+
+	override def getLogMessage(user: String,
+														 action: String): String = {
+		val basicMessage = super.getLogMessage(action, user)
+		s"${basicMessage} to ${logFile}"
 	}
 }
 
-val joe = new Person("Joe")
-	with CoffeeDrinker
+trait CloudAudit extends Audit {
+	var remoteHost = "host1"
 
-joe.drinkCoffee()
+	override def writeAudit(message: String): Unit = {
+		//write to remote host
+		println(message)
+	}
 
-joe.minutesToDozingOff
+	override def getLogMessage(action: String,
+														 user: String): String = {
+		val basicMessage = super.getLogMessage(action, user)
+		s"${basicMessage} to ${remoteHost}"
+	}
+}
 
-joe.drinkCoffee()
+abstract class MyService extends Audit {
 
-joe.minutesToDozingOff
+	def execute(): Unit = {
+		audit("MyService.execute")
+		//execute...
+	}
+}
 
+val myService0 = new MyService with LogAudit
+myService0.execute()
 
+val myService1 = new MyService with LogAudit with CloudAudit
+myService1.execute()
 
-val sue = new Person("Sue")
-	with CoffeeDrinker
-	with Exerciser
-
-sue.minutesToDozingOff
-
-sue.drinkCoffee()
-
-sue.minutesToDozingOff
-
-sue.exercise()
-
-sue.minutesToDozingOff
+val myService2 = new MyService with CloudAudit with LogAudit
+myService2.execute()
