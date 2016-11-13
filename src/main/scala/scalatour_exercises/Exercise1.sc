@@ -30,14 +30,15 @@ val vowels = List('a','e','i','o','u')
 
 
 //Step 4:
-//Use map to translate each character in input to its vowelValue
-//filter to only retain non-zero values
-//add up the non-zero values
+//Instead of a for comprehension, use map to translate each character in
+//input to its vowelValue. Then filter to only retain non-zero values
+//add up the non-zero values.
 
 
 //Step 5:
 //Use the flatMap higher-order function applied to the input string to
 //output an IndexedSeq[Int] with only the non-zero values
+//
 //Hint: flatMap requires a function with the following signature:
 //      f: (A) => GenTraversableOnce[B]
 //Option has an implicit transformation to Iterable in its companion class
