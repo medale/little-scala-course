@@ -1,8 +1,13 @@
-import org.apache.commons.io.{FileUtils, IOUtils}
-
 class Person(var name: String) {
-	if (name.isEmpty) throw new
-			IllegalArgumentException("Empty name")
+
+	nameCheck(name)
+
+	private def nameCheck(newName: String): Unit = {
+		if (newName.isEmpty) {
+			throw new
+					IllegalArgumentException("Empty name")
+		}
+	}
 }
 
 try {
@@ -14,12 +19,16 @@ try {
 
 
 val p1 = new Person("John Doe")
-
 p1.name
 
 p1.name = "John Smith"
 
 p1.name
+
+
+
+
+
 
 
 class Employee(name: String,
@@ -33,14 +42,29 @@ e1.id
 
 val uuid = "42"
 
-val e2 = new Employee("Austin Martin", uuid)
+val e2 = new Employee("Austin Martin", "123")
 
 e2.id == uuid
 
-val e3 = new Employee("Austin Martin", uuid)
+val e3 = new Employee("Austin Martin", "123")
 
 //by default - Object.equals
 val areTheyEqual = e2 == e3
+
+class Employee2(name: String,
+								val id: String = "42")
+	extends Person(name) {
+	//override equals(that: Any): Boolean = ...
+	//override hashCode: Int = ...
+}
+
+
+
+
+
+
+
+
 
 
 trait Audit {
@@ -49,21 +73,18 @@ trait Audit {
 
 	def audit(action: String): Unit = {
 		val user = getUser()
-		val message = getLogMessage(user, action)
-		writeAudit(message)
+		writeAudit(user, action)
 	}
 
-	def writeAudit(message: String): Unit
+	def writeAudit(user: String,
+								 action: String): Unit = {
+		println(s"trait Audit: ${user}-${action}")
+	}
 
 	def getUser(): String = {
 		//from login, cookie etc.
 		val randomUser = "alice"
 		randomUser
-	}
-
-	def getLogMessage(user: String,
-										action: String): String = {
-		s"${user} - ${action}"
 	}
 }
 
@@ -71,30 +92,20 @@ trait LogAudit extends Audit {
 
 	var logFile = "/var/log/audit"
 
-	override def writeAudit(message: String): Unit = {
-		//use log4j or Files to append to logFile
-		println(message)
-	}
-
-	override def getLogMessage(user: String,
-														 action: String): String = {
-		val basicMessage = super.getLogMessage(action, user)
-		s"${basicMessage} to ${logFile}"
+	override def writeAudit(user: String,
+													action: String): Unit = {
+		println(s"trait LogAudit")
+		super.writeAudit(user, action)
 	}
 }
 
 trait CloudAudit extends Audit {
 	var remoteHost = "host1"
 
-	override def writeAudit(message: String): Unit = {
-		//write to remote host
-		println(message)
-	}
-
-	override def getLogMessage(action: String,
-														 user: String): String = {
-		val basicMessage = super.getLogMessage(action, user)
-		s"${basicMessage} to ${remoteHost}"
+	override def writeAudit(user: String,
+													action: String): Unit = {
+		println(s"trait CloudAudit")
+		super.writeAudit(user, action)
 	}
 }
 

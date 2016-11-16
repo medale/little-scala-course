@@ -33,7 +33,7 @@ object Runtime {
 // 2. Create a Scala regex expression to match on runtime log entries
 // The expression should have digit capture groups for hours, min and sec
 // values (3 capture groups).
-val RuntimeRegex = "implement".r
+val RuntimeRegex = "<implement me>".r
 
 //Test your regex against logEntry if you get
 //scala.MatchError you need to tweak regex.

@@ -353,8 +353,13 @@ val hostPortOpt = url match {
 # Classes
 ```scala
 class Person(var name: String) {
-	if (name.isEmpty) throw new
-			IllegalArgumentException("Empty name")
+	nameCheck(name)
+	private def nameCheck(newName: String): Unit = {
+		if (newName.isEmpty) {
+			throw new
+				IllegalArgumentException("Empty name")
+		}
+	}
 }
 
 val p1 = new Person("John Doe")
@@ -372,9 +377,15 @@ class Employee(name: String,
 	extends Person(name)
 
 val e1 = new Employee("Jennifer Huston")
-
 e1.name
 e1.id
+
+val e2 = new Employee("Austin Martin", "123")
+val e3 = new Employee("Austin Martin", "123")
+
+//by default - Object.equals
+val areTheyEqual = e2 == e3
+> areTheyEqual: Boolean = false
 ```
 
 # Traits
@@ -383,18 +394,16 @@ trait Audit {
 	var auditLevel = "low"
 	def audit(action: String): Unit = {
 		val user = getUser()
-		val message = getLogMessage(user, action)
-		writeAudit(message)
-	}	
-	
-	def writeAudit(message: String): Unit
-	
-	def getUser(): String = {
-		"alice"
+		writeAudit(user, action)
 	}
-	def getLogMessage(user: String,
-					  action: String): String = {
-		s"${user} - ${action}"
+	def writeAudit(user: String,
+				   action: String): Unit = {
+		println(s"trait Audit: ${user}-${action}")
+	}
+	def getUser(): String = {
+		//from login, cookie etc.
+		val randomUser = "alice"
+		randomUser
 	}
 }
 ```
@@ -405,16 +414,10 @@ trait LogAudit extends Audit {
 
 	var logFile = "/var/log/audit"
 
-	override def writeAudit(message: String): Unit = {
-		//use log4j or Files to append to logFile
-		println(message)
-	}
-
-	override def getLogMessage(user: String,
-							   action: String): String = {
-		val basicMessage = 
-		   super.getLogMessage(action, user)
-		s"${basicMessage} to ${logFile}"
+	override def writeAudit(user: String,
+							action: String): Unit = {
+		println(s"trait LogAudit")
+		super.writeAudit(user, action)
 	}
 }
 ```
@@ -422,18 +425,12 @@ trait LogAudit extends Audit {
 # CloudAudit Trait
 ```scala
 trait CloudAudit extends Audit {
-	var remoteHost = "host1:2121"
+	var remoteHost = "host1"
 
-	override def writeAudit(message: String): Unit = {
-		//write to remote host
-		println(message)
-	}
-
-	override def getLogMessage(action: String,
-							   user: String): String = {
-		val basicMessage = 
-		   super.getLogMessage(action, user)
-		s"${basicMessage} to ${remoteHost}"
+	override def writeAudit(user: String,
+							action: String): Unit = {
+		println(s"trait CloudAudit")
+		super.writeAudit(user, action)
 	}
 }
 ```
@@ -441,6 +438,7 @@ trait CloudAudit extends Audit {
 # Audited Service class
 ```scala
 abstract class MyService extends Audit {
+
 	def execute(): Unit = {
 		audit("MyService.execute")
 		//execute...
@@ -452,17 +450,22 @@ abstract class MyService extends Audit {
 ```scala
 val myService0 = new MyService with LogAudit
 myService0.execute()
-> MyService.execute - alice to /var/log/audit
+> trait LogAudit
+> trait Audit: alice-MyService.execute
 
 val myService1 = 
    new MyService with LogAudit with CloudAudit
 myService1.execute()
-> MyService.execute - alice to /var/log/audit to host1
+> trait CloudAudit
+> trait LogAudit
+> trait Audit: alice-MyService.execute
 
 val myService2 = 
    new MyService with CloudAudit with LogAudit
 myService2.execute()
-> MyService.execute - alice to host1 to /var/log/audit
+> trait LogAudit
+> trait CloudAudit
+> trait Audit: alice-MyService.execute
 ```
 
 # Case Classes
@@ -500,8 +503,6 @@ val Person(name, age) = p3
 # Scala in the small - scripting
 ```scala
 import scala.sys.process._
-import scala.sys.env
-import scala.sys.props
 import scala.language.postfixOps
 
 val externalCommand = "tokenGenerator"
@@ -512,8 +513,24 @@ s"chmod +x ${externalCommand}"!
 //run command and get its output
 val myToken = s"./${externalCommand}"!!
 
+//pipe output of one command to another to a File
+("ps -ef" #| "grep scala" #> new File("scala-procs.out"))!
+```
+
+# Scripting 2
+```scala
+import scala.sys.process._
+import scala.language.postfixOps
+import scala.sys.env
+import scala.sys.props
+
+val pythonExecOpt = 
+   "which python".lineStream_!.headOption
+> pythonExecOpt: Option[String] = Some(/usr/bin/python)
+
 env("PATH")
 > res2: String = /usr/local/bin:/usr/sbin:...
+
 props("user.name")
 > res3: String = medale
 ```
@@ -589,7 +606,7 @@ implicit def augmentJavaMap[K,V](map: JavaMap[K,V]):
 }
 map.getOpt("foo")
 > res5: Option[String] = Some(bar)
-fooMap.getOpt("baz")
+map.getOpt("baz")
 > res6: Option[String] = None
 ```
 
