@@ -1,5 +1,5 @@
-def toPower(exp: Int) = { (base: Int) =>
-	Math.pow(base, exp).toInt
+def toPower(exp: Int): (Int) => Int = {
+	(base: Int) => Math.pow(base, exp).toInt
 }
 
 val squared = toPower(2)
