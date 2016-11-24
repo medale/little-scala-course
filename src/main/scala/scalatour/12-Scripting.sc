@@ -5,14 +5,15 @@ import scala.sys.env
 import scala.sys.props
 import scala.language.postfixOps
 
-val externalCommand = "tokenGenerator"
+val homeDir = props("user.home")
+val externalCommand = new File(homeDir, "tokenGenerator").getAbsolutePath
 //s"./${externalCommand}"!
 
 //run command and get its status code
 s"chmod +x ${externalCommand}"!
 
 //run command and get its output
-val myToken = s"./${externalCommand}"!!
+val myToken = s"${externalCommand}"!!
 
 //pipe output of one command to another to a File
 ("ps -ef" #| "grep scala" #> new File("scala-procs.out"))!

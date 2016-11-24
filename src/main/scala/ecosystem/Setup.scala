@@ -13,7 +13,7 @@ object Setup {
 
 	def main(args: Array[String]): Unit = {
 		val homeDir = props("user.home")
-		val resources = List("/dictionary/american-english", "/scripts/tokenGenerator")
+		val resources = List("/scripts/tokenGenerator")
 		resources.foreach { resource =>
 			val in = getClass.getResourceAsStream(resource)
 			val lastSlashIndex = resource.lastIndexOf("/")
