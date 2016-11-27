@@ -20,8 +20,8 @@ getAlphaSorted("goose")
 
 //Must run ecosystem.Setup to copy file to home dir
 val userHome = props("user.home")
-//enable2k.txt from http://www.morewords.com/enable2k.txt
-val dictFile = new File(userHome, "enable2k.txt")
+//https://github.com/elasticdog/yawl
+val dictFile = new File(userHome, "yawlWords.list")
 val allEntries = Source.fromFile(dictFile).getLines().toList
 
 allEntries.size
@@ -47,45 +47,3 @@ entriesOfInterest.foreach { e =>
 val wordsWithAelst = entryMap("aelst")
 
 "aabc".combinations(3).toList
-"ab".combinations(1).toList
-"c".combinations(0).toList
-
-def getAllWords(tiles: String): List[String] = {
-
-	def getExactMatches(sortedMatchTiles: String): Set[String] = {
-		entryMap(sortedMatchTiles)
-	}
-
-	@tailrec def getWordsForCombos(tileCombos: List[String],
-												wordsSoFar: Set[String]): Set[String] = {
-		tileCombos match {
-			case headCombo :: tailCombos => {
-				val wordsWithHeadCombo =
-					getExactMatches(headCombo) ++ wordsSoFar
-				getWordsForCombos(tailCombos, wordsWithHeadCombo)
-			}
-			case Nil => wordsSoFar
-		}
-	}
-
-	def loop(tileCombos: List[String],
-					 wordsSoFar: Set[String]
-					): Set[String] = {
-		tileCombos match {
-			case headCombo :: tailCombos => {
-				val oneTileShorterCombos = headCombo.combinations(headCombo.length - 1).toList
-				val wordsForOneTileShorterCombos =
-					getWordsForCombos(oneTileShorterCombos, Set())
-				val newTileCombos = oneTileShorterCombos ++ tailCombos
-				loop(newTileCombos, wordsForOneTileShorterCombos ++ wordsSoFar)
-			}
-			case Nil => wordsSoFar
-		}
-	}
-
-	val sortedTiles = getAlphaSorted(tiles.toLowerCase)
-	val wordsSoFar = getExactMatches(sortedTiles)
-	loop(List(sortedTiles), wordsSoFar).toList.sortWith((s1,s2) => s1.length > s2.length)
-}
-
-println(getAllWords("eimvo").mkString("\n"))

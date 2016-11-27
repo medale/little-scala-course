@@ -7,7 +7,7 @@ import scala.language.postfixOps
 
 val homeDir = props("user.home")
 val externalCommand = new File(homeDir, "tokenGenerator").getAbsolutePath
-//s"./${externalCommand}"!
+// s"${externalCommand}"!
 
 //run command and get its status code
 s"chmod +x ${externalCommand}"!
@@ -16,7 +16,7 @@ s"chmod +x ${externalCommand}"!
 val myToken = s"${externalCommand}"!!
 
 //pipe output of one command to another to a File
-("ps -ef" #| "grep scala" #> new File("scala-procs.out"))!
+("ps -ef" #| "grep scala" #> new File(homeDir, "scala-procs.out"))!
 
 val pythonExecOpt = "which python".lineStream_!.headOption
 
