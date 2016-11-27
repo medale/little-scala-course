@@ -19,7 +19,7 @@ class DictionaryTest extends FlatSpec {
     val wordDict = new Dictionary(Dictionary.DefaultDictionaryWords)
     val expectedWords = Set("marle", "realm", "lamer")
     assertResult(expectedWords) {
-      wordDict.getWordsForGivenTiles("maelr")
+      wordDict.getWordsMatchingAllGivenTiles("maelr")
     }
   }
 
@@ -28,7 +28,7 @@ class DictionaryTest extends FlatSpec {
       Dictionary.DefaultDictionaryFile.canRead)
     val wordDict = new Dictionary(Dictionary.DefaultDictionaryWords)
     assertResult(Set()) {
-      wordDict.getWordsForGivenTiles("xyz")
+      wordDict.getWordsMatchingAllGivenTiles("xyz")
     }
   }
 

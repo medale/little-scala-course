@@ -1,6 +1,5 @@
 import java.io.File
 
-import scala.annotation.tailrec
 import scala.io.Source
 import scala.sys.props
 
@@ -24,19 +23,12 @@ val userHome = props("user.home")
 val dictFile = new File(userHome, "yawlWords.list")
 val allEntries = Source.fromFile(dictFile).getLines().toList
 
-allEntries.size
-
-val entriesOfInterest = allEntries.
-	filter(_.length <= 7)
-
-entriesOfInterest.size
-
 //notice var!
 //default value if key does not exist - empty list
 var entryMap = Map[String, Set[String]]().withDefaultValue(Set())
 
 //iterate of entries for side-effect
-entriesOfInterest.foreach { e =>
+allEntries.foreach { e =>
 	val value = e.toLowerCase()
 	val key = getAlphaSorted(value)
 	val currSet = entryMap(key)
@@ -46,4 +38,13 @@ entriesOfInterest.foreach { e =>
 
 val wordsWithAelst = entryMap("aelst")
 
-"aabc".combinations(3).toList
+//OK, what three letter words could we
+//make from the tiles aelst?
+val threeLetterCombos = "aelst".combinations(3).toList
+
+//What's a tes?
+//dictionary.com:
+//(in philosophical Taoism) the virtue or power inherent
+// in a person or thing existing in harmony with the Tao.
+val threeLetterWordsFromAelst =
+	threeLetterCombos.flatMap(entryMap)

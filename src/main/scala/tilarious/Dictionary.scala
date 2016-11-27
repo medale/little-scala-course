@@ -76,7 +76,7 @@ class Dictionary(words: List[String]) {
     * @param tiles
     * @return Set of words or empty Set if no matching words
     */
-  def getWordsForGivenTiles(tiles: String): Set[String] = {
+  def getWordsMatchingAllGivenTiles(tiles: String): Set[String] = {
     val key = Dictionary.getAlphaSorted(tiles.toLowerCase)
     wordMap(key)
   }
