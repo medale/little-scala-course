@@ -12,6 +12,7 @@ import scala.collection.JavaConverters._
 import resource._
 
 /**
+  * Companion object - defined in same file as class.
   * Static convenience methods around word dictionary.
   */
 object Dictionary extends LazyLogging {

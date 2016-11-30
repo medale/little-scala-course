@@ -2,9 +2,6 @@ package tilarious
 
 import org.scalatest.FlatSpec
 
-/**
-  * Scalatest XUnit style tests
-  */
 class DictionaryTest extends FlatSpec {
 
   "Default Dictionary words" must "have size > 0" in {
@@ -23,7 +20,7 @@ class DictionaryTest extends FlatSpec {
     }
   }
 
-  "Default dict" must "return empty set" in {
+  "Default dict" must "return empty set for tiles with no associated words" in {
     assume(Dictionary.DefaultDictionaryFile.exists() &&
       Dictionary.DefaultDictionaryFile.canRead)
     val wordDict = new Dictionary(Dictionary.DefaultDictionaryWords)

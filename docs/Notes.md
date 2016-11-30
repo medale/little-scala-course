@@ -63,3 +63,13 @@ stack
 
 "CamelCase".toLowerCase
 ```
+
+```
+import java.util.{List => JavaList}
+//class from type
+val stringClass = classOf[String]
+
+//class from object
+"hello".getClass
+
+```
