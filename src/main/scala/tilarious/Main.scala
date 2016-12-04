@@ -7,6 +7,8 @@ object Main {
 
   /**
     * Program entry point
+    * sbt
+    * > run tca
     *
     * @param args
     */
