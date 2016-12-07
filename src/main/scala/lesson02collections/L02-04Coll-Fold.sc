@@ -4,7 +4,9 @@ l.reduce((x,y) => x * y)
 
 //def foldLeft[B](z: B)(op: (B, A) ⇒ B): B
 val words = List("The","Great","Gatsby")
+
 val zeroVal: Map[Char,Long] = Map().withDefaultValue(0)
+
 val op: (Map[Char,Long], String) => Map[Char,Long] = {
   (map,word) =>
     var newCharMap = map
@@ -17,4 +19,4 @@ val op: (Map[Char,Long], String) => Map[Char,Long] = {
     newCharMap
 }
 
-val countTotal = words.foldLeft(zeroVal)(op)
+val charToCountsMap = words.foldLeft(zeroVal)(op)

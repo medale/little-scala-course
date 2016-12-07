@@ -1,3 +1,5 @@
+//functions that take or return functions
+
 def isEven(i: Int): Boolean = {
 	i % 2 == 0
 }

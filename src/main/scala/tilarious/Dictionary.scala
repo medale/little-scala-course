@@ -17,6 +17,7 @@ import resource._
   */
 object Dictionary extends LazyLogging {
 
+  //run ecosystem.Setup to download/URL
   lazy val DefaultDictionaryFile = {
     val userHome = props("user.home")
     new File(userHome, "yawlWords.list")
