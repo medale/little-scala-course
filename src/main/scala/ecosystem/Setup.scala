@@ -1,7 +1,6 @@
 package ecosystem
 
 import java.io.{File, FileOutputStream}
-import java.net.URL
 import java.nio.charset.StandardCharsets
 
 import com.typesafe.scalalogging.LazyLogging
