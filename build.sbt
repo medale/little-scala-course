@@ -2,28 +2,49 @@ name := "little-scala-course"
 version := "1.0"
 scalaVersion := "2.11.8"
 
-libraryDependencies += "commons-io" % "commons-io" % "2.5"
-libraryDependencies += "com.typesafe" % "config" % "1.3.1"
-libraryDependencies += "com.jsuereth" %% "scala-arm" % "1.4"
-libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0"
-libraryDependencies += "org.apache.spark" %% "spark-core" % "2.0.1" exclude("org.scalatest", "scalatest_2.11")
-libraryDependencies += "org.apache.spark" %% "spark-sql" % "2.0.1" exclude("org.scalatest", "scalatest_2.11")
-libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.1" % "test"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+val sparkVersion = "2.2.0"
 
-//From scoverage examples
-//coverageEnabled := true
-//sbt clean coverage test
-//sbt coverageReport
-coverageExcludedPackages := "ecosystem.*;scalatour.*"
-coverageMinimum := 70
-coverageFailOnMinimum := false
-coverageHighlighting := {
-  if (scalaBinaryVersion.value == "2.11")
-    true
-  else
-    false
-}
+val lightbendDependencies = Seq(
+  ("com.typesafe" % "config" % "1.3.2"),
+  ("com.typesafe.play" %% "play-json" % "2.6.7")
+    .exclude("org.scala-lang", "scala-library")
+    .exclude("com.fasterxml.jackson.core", "jackson-core")
+    .exclude("com.fasterxml.jackson.core", "jackson-annotations")
+    .exclude("com.fasterxml.jackson.core", "jackson-databind")
+    .exclude("com.fasterxml.jackson.datatype", "jackson-datatype-jdk8")
+    .exclude("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310"),
+  ("com.typesafe.scala-logging" %% "scala-logging" % "3.7.2")
+)
+
+val sparkDependencies = Seq(
+  ("org.apache.spark" %% "spark-core" % sparkVersion % "provided")
+    .exclude("org.scalatest", "scalatest_2.11"),
+  ("org.apache.spark" %% "spark-sql" % sparkVersion % "provided")
+    .exclude("org.scalatest", "scalatest_2.11"),
+  ("org.apache.spark" %% "spark-hive" % sparkVersion % "provided")
+    .exclude("org.scalatest", "scalatest_2.11")
+)
+
+val miscDependencies = Seq(
+  //match Spark jackson version
+  ("com.fasterxml.jackson.core" % "jackson-databind" % "2.6.5"),
+  ("com.fasterxml.jackson.core" % "jackson-annotations" % "2.6.5"),
+  ("commons-io" % "commons-io" % "2.6"),
+  ("com.jsuereth" %% "scala-arm" % "2.0")
+)
+
+val testDependencies = Seq(
+  ("org.scalactic" %% "scalactic" % "3.0.4" % "it,test"),
+  ("org.scalatest" %% "scalatest" % "3.0.4" % "it,test")
+)
+
+lazy val root = (project in file("."))
+  .configs(IntegrationTest)
+  .settings(Defaults.itSettings: _*)
+  .settings(libraryDependencies := lightbendDependencies ++
+    sparkDependencies ++
+    miscDependencies ++
+    testDependencies)
 
 publishArtifact in Test := false
 parallelExecution in Test := false
