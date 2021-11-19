@@ -1,17 +1,17 @@
 package tilarious
 
 /**
-  * Make sure main method is defined on object or companion object.
-  */
+ * Make sure main method is defined on object or companion object.
+ */
 object Main {
 
   /**
-    * Program entry point
-    * sbt
-    * > run tca
-    *
+   * Program entry point
+   * sbt
+   * > run tca
+   *
     * @param args
-    */
+   */
   def main(args: Array[String]): Unit = {
     val myDict = new Dictionary(Dictionary.DefaultDictionaryWords)
     val wordGen = new WordGenerator(myDict)
@@ -25,4 +25,5 @@ object Main {
       println("Main was run without args")
     }
   }
+
 }

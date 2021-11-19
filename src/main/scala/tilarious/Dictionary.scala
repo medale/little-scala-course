@@ -7,18 +7,18 @@ import java.util.{List => JavaList}
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.IOUtils
 
+import scala.jdk.CollectionConverters._
 import scala.sys.props
-import scala.collection.JavaConverters._
-import resource._
+import scala.util.Using
 
 /**
-  * Companion object - defined in same file as class.
-  * Static convenience methods around word dictionary.
-  */
+ * Companion object - defined in same file as class.
+ * Static convenience methods around word dictionary.
+ */
 object Dictionary extends LazyLogging {
 
   //run ecosystem.Setup to download/URL
-  lazy val DefaultDictionaryFile = {
+  lazy val DefaultDictionaryFile: File = {
     val userHome = props("user.home")
     new File(userHome, "yawlWords.list")
   }
@@ -26,13 +26,14 @@ object Dictionary extends LazyLogging {
   lazy val DefaultDictionaryWords: List[String] = {
     var words: List[String] = null
     try {
-      for (dictIn <- managed(new FileInputStream(DefaultDictionaryFile))) {
+      Using(new FileInputStream(DefaultDictionaryFile)) { dictIn =>
         val lines: JavaList[String] = IOUtils.readLines(dictIn, StandardCharsets.UTF_8)
         words = lines.asScala.toList
       }
     } catch {
       case e: IOException => {
-        val errMsg = s"Unable to read ${DefaultDictionaryFile.getAbsolutePath}. Please download by running ecosystem.Setup"
+        val errMsg =
+          s"Unable to read ${DefaultDictionaryFile.getAbsolutePath}. Please download by running ecosystem.Setup"
         logger.error(errMsg)
         throw new IllegalStateException(errMsg)
       }
@@ -41,20 +42,21 @@ object Dictionary extends LazyLogging {
   }
 
   /**
-    * Return the characters of the param string
-    * sorted by alphabetical order.
-    *
+   * Return the characters of the param string
+   * sorted by alphabetical order.
+   *
     * @param tiles
-    * @return tiles in alpha sort
-    */
+   * @return tiles in alpha sort
+   */
   def getAlphaSorted(tiles: String): String = {
     tiles.sorted
   }
+
 }
 
 /**
-  * A dictionary of allowable words.
-  */
+ * A dictionary of allowable words.
+ */
 class Dictionary(words: List[String]) {
 
   //create a map with alphaSorted chars key and
@@ -73,13 +75,14 @@ class Dictionary(words: List[String]) {
   }
 
   /**
-    * Get exact matches for param tiles.
-    *
+   * Get exact matches for param tiles.
+   *
     * @param tiles
-    * @return Set of words or empty Set if no matching words
-    */
+   * @return Set of words or empty Set if no matching words
+   */
   def getWordsMatchingAllGivenTiles(tiles: String): Set[String] = {
     val key = Dictionary.getAlphaSorted(tiles.toLowerCase)
     wordMap(key)
   }
+
 }

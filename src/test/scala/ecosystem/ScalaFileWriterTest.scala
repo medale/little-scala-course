@@ -3,17 +3,16 @@ package ecosystem
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-
 import org.scalatest.BeforeAndAfter
-import org.scalatest.FunSpec
-import org.scalatest.Matchers
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
-  *
+ *
   */
-class ScalaFileWriterTest extends FunSpec with BeforeAndAfter with Matchers {
+class ScalaFileWriterTest extends AnyFunSpec with BeforeAndAfter with Matchers {
 
   var baseDir: Path = null
 
@@ -33,7 +32,7 @@ class ScalaFileWriterTest extends FunSpec with BeforeAndAfter with Matchers {
 
       resultEither match {
         case Right(path) => path === filePath
-        case Left(ex) => fail(s"Test failed due to $ex")
+        case Left(ex)    => fail(s"Test failed due to $ex")
       }
 
       val lines = Files.readAllLines(filePath).asScala
@@ -50,7 +49,7 @@ class ScalaFileWriterTest extends FunSpec with BeforeAndAfter with Matchers {
 
       resultEither match {
         case Right(path) => path === filePath
-        case Left(ex) => fail(s"Test failed due to $ex")
+        case Left(ex)    => fail(s"Test failed due to $ex")
       }
 
       val lines = Files.readAllLines(filePath).asScala

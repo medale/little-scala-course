@@ -5,16 +5,16 @@ import java.nio.charset.StandardCharsets
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.IOUtils
-import resource._
 
 import scala.io.Source
+import scala.util.Using
 import scala.sys.props
 
 /**
-  * Worksheets execute from different locations depending on OS.
-  * So we copy everything to the user's home directory and then
-  * explicity load resources from there.
-  */
+ * Worksheets execute from different locations depending on OS.
+ * So we copy everything to the user's home directory and then
+ * explicity load resources from there.
+ */
 object Setup extends LazyLogging {
 
   def main(args: Array[String]): Unit = {
@@ -30,7 +30,7 @@ object Setup extends LazyLogging {
       val lastSlashIndex = resource.lastIndexOf("/")
       val fileName = resource.substring(lastSlashIndex + 1)
       val outputFile = new File(homeDir, fileName)
-      for (out <- managed(new FileOutputStream(outputFile))) {
+      Using(new FileOutputStream(outputFile)) { out =>
         IOUtils.copy(in, out)
         logger.debug(s"Wrote ${resource} to ${outputFile.getAbsolutePath}")
       }
@@ -41,11 +41,10 @@ object Setup extends LazyLogging {
     val yawlUrl = "https://raw.githubusercontent.com/elasticdog/yawl/master/yawl-0.3.2.03/word.list"
     val yawl = Source.fromURL(yawlUrl, StandardCharsets.UTF_8.toString).mkString
     val wordListFile = new File(homeDir, "yawlWords.list")
-    for (yawlOut <- managed(new FileOutputStream(wordListFile))) {
+    Using(new FileOutputStream(wordListFile)) { yawlOut =>
       IOUtils.write(yawl, yawlOut, StandardCharsets.UTF_8)
       logger.debug(s"Wrote yawl url content to ${wordListFile.getAbsolutePath}")
     }
   }
-
 
 }

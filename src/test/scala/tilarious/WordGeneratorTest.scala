@@ -14,8 +14,7 @@ class WordGeneratorTest extends UnitTest {
     val dict = new Dictionary(List())
     val wordGen = new WordGenerator(dict)
 
-    val expectedCombos = Set("abcd", "abc", "abd","acd", "bcd",
-      "ab", "ac", "ad", "bc","bd", "cd")
+    val expectedCombos = Set("abcd", "abc", "abd", "acd", "bcd", "ab", "ac", "ad", "bc", "bd", "cd")
 
     assertResult(expectedCombos) {
       wordGen.generateAllTileCombinations("dabc")
@@ -26,8 +25,7 @@ class WordGeneratorTest extends UnitTest {
     val dict = new Dictionary(List())
     val wordGen = new WordGenerator(dict)
 
-    val expectedCombos = Set("aacd", "aac", "aad","acd",
-      "aa", "ac", "ad", "cd")
+    val expectedCombos = Set("aacd", "aac", "aad", "acd", "aa", "ac", "ad", "cd")
 
     assertResult(expectedCombos) {
       wordGen.generateAllTileCombinations("daac")
