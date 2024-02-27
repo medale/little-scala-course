@@ -1,8 +1,8 @@
 package tilarious
 
-import org.scalatest.FlatSpec
+import org.scalatest.flatspec.AnyFlatSpec
 
 /**
  * Common base class for most tests
  */
-class UnitTest extends FlatSpec {}
+class UnitTest extends AnyFlatSpec {}

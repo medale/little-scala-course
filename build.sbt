@@ -18,7 +18,7 @@ inThisBuild(
   )
 )
 
-val scalaTestVersion = "3.2.10"
+val scalaTestVersion = "3.2.17"
 val sparkVersion = "3.2.0"
 
 val lightbendDependencies = Seq(
@@ -36,7 +36,8 @@ val sparkDependencies = Seq(
 )
 
 val miscDependencies = Seq(
-  ("commons-io" % "commons-io" % "2.11.0")
+  ("commons-io" % "commons-io" % "2.11.0"),
+  ("com.lihaoyi" %% "upickle" % "3.2.0")
 )
 
 val testDependencies = Seq(

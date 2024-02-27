@@ -22,7 +22,7 @@ object Spark15 {
 
     val peopleDs = spark.createDataset(people)
 
-    val youngerDs = peopleDs.filter(p => p.age < 40)
+    // val youngerDs = peopleDs.filter(p => p.age < 40)
 
     val resultRows = peopleDs.groupBy($"name").avg("age").collect()
 

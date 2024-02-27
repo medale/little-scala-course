@@ -1,8 +1,8 @@
 package tilarious
 
-import org.scalatest.FlatSpec
+import org.scalatest.flatspec.AnyFlatSpec
 
-class DictionaryTest extends FlatSpec {
+class DictionaryTest extends AnyFlatSpec {
 
   "Default Dictionary words" must "have size > 0" in {
     assume(

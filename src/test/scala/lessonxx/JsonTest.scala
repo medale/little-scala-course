@@ -1,18 +1,17 @@
 package lessonxx
 
+import common.BaseTest
+
 import java.nio.charset.StandardCharsets
 
 import org.apache.commons.io.IOUtils
-import org.scalatest.BeforeAndAfterAll
-import org.scalatest.FunSpec
-import org.scalatest.Matchers
-import play.api.libs.json.JsValue
-import play.api.libs.json.Json
+
+import upickle.default._
 
 //check auto-skip of fields in object - has firstName, lastName, age
 case class Person(firstName: String, age: Int)
 
-class PlayJsonTest extends FunSpec with Matchers with BeforeAndAfterAll {
+class JsonTest extends BaseTest {
 
   var jsonStr: String = null
 
@@ -21,12 +20,12 @@ class PlayJsonTest extends FunSpec with Matchers with BeforeAndAfterAll {
     jsonStr = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
   }
 
-  describe("Play Json API") {
+  describe("UJson API") {
     it("should return array with correct person objects") {
-      val json: JsValue = Json.parse(jsonStr)
-      implicit val personReader = Json.reads[Person]
+      val json = ujson.read(jsonStr)
+      implicit val personReadWriter: ReadWriter[Person] = macroRW[Person]
 
-      val people = json.as[List[Person]]
+      val people = json.arr.map(v => read(v)(personReadWriter))
 
       people.size should be(2)
 

@@ -33,7 +33,7 @@ object Dictionary extends LazyLogging {
     } catch {
       case e: IOException => {
         val errMsg =
-          s"Unable to read ${DefaultDictionaryFile.getAbsolutePath}. Please download by running ecosystem.Setup"
+          s"Unable to read ${DefaultDictionaryFile.getAbsolutePath} due to ${e.getMessage()}. Please download by running ecosystem.Setup"
         logger.error(errMsg)
         throw new IllegalStateException(errMsg)
       }
