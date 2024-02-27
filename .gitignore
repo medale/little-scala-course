@@ -25,4 +25,4 @@ project/plugins/project/
 .vscode
 project/metals.sbt
 project/project
-.scala-build
+#.scala-build
