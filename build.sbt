@@ -2,10 +2,10 @@ inThisBuild(
   List(
     version := "2.0-SNAPSHOT",
     organization := "org.uebercomputing",
-    scalaVersion := "2.13.7",
+    scalaVersion := "2.13.12",
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
-    scalacOptions := Seq("-target:jvm-1.8",
+    scalacOptions := Seq(
     "-encoding", "UTF-8",
     "-unchecked",
     "-deprecation",
